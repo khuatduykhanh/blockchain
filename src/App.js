@@ -33,7 +33,7 @@ function App() {
         if (!error) {
             console.log("Name " + result.args.name +
                 " ZombieId " + result.args.zombieId +
-                " Dna " + result.args.dna + ".");
+                " Dna " + result.args.dna + ".")
             
         }
     })
