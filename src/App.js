@@ -54,11 +54,15 @@ function App() {
       const contract = new ethers.Contract(addressZombieFactory, zombiefactory.abi, signer)
       const transaction = await contract.createRandomZombie(nameZombie)
       await transaction.wait()
-      contract.on("NewZombie", (_name, id, _dna) => {
+      try {
+      await contract.on("NewZombie", (_name, id, _dna) => {
         const data = generateZombie(id, _name, _dna)
         console.log(data)
         });
-       
+      }
+      catch(e) {
+        console.log("lỗi");
+      } 
         
     
     }
@@ -74,10 +78,15 @@ function App() {
       const contractzombie = new ethers.Contract(addressZombieFactory, zombiefactory.abi, signer)
       const transaction = await contract.feedOnKitty(zombieId,kittyId)
       await transaction.wait()
-      contractzombie.on("NewZombie", (_name, id, _dna) => {
-        const data = generateZombie(id, _name, _dna)
-        console.log(data)
-        });
+      try {
+        await contractzombie.on("NewZombie", (_name, id, _dna) => {
+          const data = generateZombie(id, _name, _dna)
+          console.log(data)
+          });
+        }
+        catch(e) {
+          console.log("lỗi");
+        } 
       
   }
   }   
