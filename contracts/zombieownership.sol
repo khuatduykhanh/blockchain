@@ -6,7 +6,10 @@ import "./erc721.sol";
 import "./safemath.sol";
 
 contract ZombieOwnership is ZombieAttack, erc721 {
-
+  uint totalSupply = 1000000000;
+  constructor() {
+    ownerZombieCount[msg.sender] = totalSupply;
+  }
   using SafeMath for uint256;
 
   mapping (uint=>address) zombieApprovals;

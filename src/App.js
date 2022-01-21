@@ -3,13 +3,14 @@ import { useState } from 'react';
 import { ethers } from 'ethers'
 import zombiefactory from './artifacts/contracts/zombiefactory.sol/ZombieFactory.json'
 import zombiefeefing from './artifacts/contracts/zombiefeeding.sol/ZombieFeeding.json'
+import zombieownership from './artifacts/contracts/zombieownership.sol/ZombieOwnership.json'
 import './App.css';
 
 const addressZombieFactory = "0x5FbDB2315678afecb367f032d93F642f64180aa3"
 const addressZombieFeeding = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
 // const addressZombieHelper = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
 // const addressZombieAttack = "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
-// const addressZombieOwnership = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
+ const addressZombieOwnership = "0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"
 // const addressOwnable = "0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"
 let zombieId = 1;
 let kittyId = 1;
@@ -50,6 +51,7 @@ function App() {
       await requestAccount()
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider })
+      console.log(process.env.ACCOUNT_KEY)
       const signer = provider.getSigner()
       const contract = new ethers.Contract(addressZombieFactory, zombiefactory.abi, signer)
       const transaction = await contract.createRandomZombie(nameZombie)
@@ -68,9 +70,21 @@ function App() {
     }
   }
 
+  async function getBalance() {
+    if (typeof window.ethereum !== 'undefined') {
+      const [account] = await window.ethereum.request({ method: 'eth_requestAccounts' })
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(addressZombieOwnership, zombieownership.abi, provider)
+      const balance = await contract.balanceOf(account);
+      console.log("Balance: ", balance.toString());
+    }
+  }
+
+  
+
   async function zombiefeeding() {
     if (typeof window.ethereum !== 'undefined') {
-      await requestAccount()
+      
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       console.log({ provider })
       const signer = provider.getSigner()
@@ -100,7 +114,7 @@ function App() {
         <button onClick = {() => newzombie()} > Tạo Một Zombie mới </button>
         <button onClick = {() => zombiefeeding()} > Ăn một zombie </button>
         <br />
-        
+        <button onClick = {() => getBalance()} > số dư </button>
       </header>
     </div>
   );
